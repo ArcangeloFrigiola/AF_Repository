@@ -2,6 +2,7 @@ package it.polito.tdp.esempioSQL.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,15 +16,16 @@ public class LeggiBabs {
 		try {
 			Connection conn = DriverManager.getConnection(jdbcURL);
 			
-			Statement st = conn.createStatement();
-			
-			String sql = "SELECT NAME FROM station"; //Scritta su MariaDB, BRUTTO!!!!!
+			//String sql = "SELECT NAME FROM station"; //Scritta su MariaDB, BRUTTO!!!!!
+			String sql = "SELECT NAME FROM station WHERE landmark = ? "; //MOLTO MEGLIO
+			PreparedStatement st = conn.prepareStatement(sql);//Il template e il PreparedStatement va fatto una volta sola
 			
 			/*
 			 * Se la Query modifica (INSERT, UPDATE, etc), usare excecuteUpdate()
 			 */
 			
-			ResultSet res = st.executeQuery(sql);
+			st.setString(1, "Palo Alto");
+			ResultSet res = st.executeQuery();
 			
 			while(res.next()) {
 				String nomeStazione = res.getString("name");
